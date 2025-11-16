@@ -200,8 +200,8 @@ const logolessColorSchemes: LogolessColorSchemes = {
     dark: { foreground: '#3271FF', background: '#10143D' },
   },
   [LOGOLESS_COLORS.PURPLE]: {
-    light: { foreground: '#9E62FF', background: '#FAF5FF' },
-    dark: { foreground: '#9E62FF', background: '#1A0040' },
+    light: { foreground: '#0EC4B4', background: '#E6FFFA' },
+    dark: { foreground: '#0EC4B4', background: '#064E3B' },
   },
 }
 

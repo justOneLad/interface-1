@@ -10,5 +10,5 @@ export const UNICON_COLORS: ColorStrings[] = [
   ['#00C3A0', '#5CFE9D'],
   ['#23A3FF', '#3ADCFF'],
   ['#4981FF', '#0047FF'],
-  ['#4300B0', '#9E62FF'],
+  ['#047857', '#0EC4B4'],
 ]

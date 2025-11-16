@@ -61,11 +61,11 @@ const accentColors = {
   blueVibrant: '#0047FF',
   blueDark: '#10143D',
 
-  purpleLight: '#FAF5FF',
-  purplePastel: '#E9D8FD',
-  purpleBase: '#9E62FF',
-  purpleVibrant: '#4300B0',
-  purpleDark: '#1A0040',
+  purpleLight: '#E6FFFA',
+  purplePastel: '#B2F5EA',
+  purpleBase: '#0EC4B4',
+  purpleVibrant: '#047857',
+  purpleDark: '#064E3B',
 }
 
 export const colors = {
@@ -76,7 +76,7 @@ export const colors = {
   ...accentColors,
 
   uniswapXViolet: '#4673FA',
-  uniswapXPurple: '#7D55FB',
+  uniswapXPurple: '#0EC4B4',
 
   fiatOnRampBanner: '#FB36D0',
 }

@@ -87,9 +87,9 @@ export const colors = {
   // TODO: add magenta 50-900
   magenta300: '#FD82FF',
   magentaVibrant: '#FC72FF',
-  purple300: '#8440F2',
-  purple900: '#1C0337',
-  purpleVibrant: '#6100FF',
+  purple300: '#0EC4B4',
+  purple900: '#064E3B',
+  purpleVibrant: '#047857',
   // TODO: add all other vibrant variations
   networkEthereum: '#627EEA',
   networkOptimism: '#FF0420',
