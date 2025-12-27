@@ -14,13 +14,10 @@ import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
 import { MAINNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { isExtensionApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -32,7 +29,7 @@ export function ReceiveQRCode({ address }: { address: Address }): JSX.Element | 
   const dispatch = useDispatch()
   const addressColor = useAddressColorProps(address)
   const { chains: enabledChainIds } = useEnabledChains({
-    platform: isEVMAddress(address) ? Platform.EVM : Platform.SVM,
+    platform: Platform.EVM,
   })
   const isShortMobileDevice = useIsShortMobileDevice()
 
@@ -43,8 +40,7 @@ export function ReceiveQRCode({ address }: { address: Address }): JSX.Element | 
   const displayName = useWalletDisplayName(address, { includeUnitagSuffix: true })
   const displayHeaderAddress = displayName?.type === DisplayNameType.Address
 
-  const platformAddressLabel =
-    (isEVMAddress(address) ? MAINNET_CHAIN_INFO.name : SOLANA_CHAIN_INFO.name) + ' ' + t('common.address').toLowerCase()
+  const platformAddressLabel = MAINNET_CHAIN_INFO.name + ' ' + t('common.address').toLowerCase()
 
   const { value: copied, setTrue: setCopiedTrue, setFalse: setCopiedFalse } = useBooleanState(false)
 
@@ -156,19 +152,10 @@ export function ReceiveQRCode({ address }: { address: Address }): JSX.Element | 
         <TouchableArea gap="$gap4" mt="$spacing4" onPress={openSupportedNetworksModal}>
           <Text variant="body3">{t('fiatOnRamp.receiveCrypto.useThisAddress')}</Text>
           <Flex row centered gap="$gap4">
-            {isEVMAddress(address) ? (
-              <>
-                <NetworkLogo chainId={null} size={iconSizes.icon20} />
-                <Text variant="buttonLabel3">
-                  {enabledChainIds.length} {t('extension.connection.networks').toLowerCase()}
-                </Text>
-              </>
-            ) : (
-              <>
-                <NetworkLogo chainId={UniverseChainId.Solana} size={iconSizes.icon20} />
-                <Text variant="buttonLabel3">{SOLANA_CHAIN_INFO.name}</Text>
-              </>
-            )}
+            <NetworkLogo chainId={null} size={iconSizes.icon20} />
+            <Text variant="buttonLabel3">
+              {enabledChainIds.length} {t('extension.connection.networks').toLowerCase()}
+            </Text>
             <InfoCircleFilled color="$neutral3" size="$icon.12" />
           </Flex>
         </TouchableArea>

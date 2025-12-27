@@ -1,7 +1,6 @@
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
-import { DEFAULT_NATIVE_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   areCurrencyIdsEqual,
@@ -90,9 +89,6 @@ describe('currencyId', () => {
     [UniverseChainId.Mainnet, DAI.address, false],
     [UniverseChainId.Mainnet, 'ETH', true],
     [UniverseChainId.Mainnet, DEFAULT_NATIVE_ADDRESS, true],
-    [UniverseChainId.Solana, getNativeAddress(UniverseChainId.Solana), true],
-    [UniverseChainId.Solana, '11111', false],
-    [UniverseChainId.Solana, DEFAULT_NATIVE_ADDRESS_SOLANA, true],
   ])(
     'isNativeCurrencyAddress returns correct result for chainId=%s + address=%s = %s',
     // eslint-disable-next-line max-params

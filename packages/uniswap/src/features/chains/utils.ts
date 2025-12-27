@@ -91,8 +91,6 @@ export function fromGraphQLChain(chain: GraphQLApi.Chain | string | undefined): 
       return UniverseChainId.Sepolia
     case GraphQLApi.Chain.Unichain:
       return UniverseChainId.Unichain
-    case GraphQLApi.Chain.Solana:
-      return UniverseChainId.Solana
     case GraphQLApi.Chain.Soneium:
       return UniverseChainId.Soneium
     case GraphQLApi.Chain.AstrochainSepolia:
@@ -269,17 +267,11 @@ export function getEnabledChains({
 }
 
 function getDefaultChainId({
-  platform,
   isTestnetModeEnabled,
 }: {
   platform?: Platform
   isTestnetModeEnabled: boolean
 }): UniverseChainId {
-  if (platform === Platform.SVM) {
-    // TODO(Solana): is there a Solana testnet we can return here?
-    return UniverseChainId.Solana
-  }
-
   return isTestnetModeEnabled ? UniverseChainId.Sepolia : UniverseChainId.Mainnet
 }
 

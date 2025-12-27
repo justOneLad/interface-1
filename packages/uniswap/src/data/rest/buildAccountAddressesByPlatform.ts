@@ -3,17 +3,15 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 export type AccountAddressesByPlatform = Record<Platform, string>
 
 /**
- * Builds a platform-keyed map of account addresses from input containing evmAddress and/or svmAddress.
+ * Builds a platform-keyed map of account addresses from input containing evmAddress.
  * This is used for React Query cache keys to avoid protobuf enum conversion.
  */
 export function buildAccountAddressesByPlatform(input?: {
   evmAddress?: string
-  svmAddress?: string
 }): AccountAddressesByPlatform | undefined {
-  return input?.evmAddress || input?.svmAddress
+  return input?.evmAddress
     ? ({
-        ...(input.evmAddress ? { [Platform.EVM]: input.evmAddress } : {}),
-        ...(input.svmAddress ? { [Platform.SVM]: input.svmAddress } : {}),
+        [Platform.EVM]: input.evmAddress,
       } as Record<Platform, string>)
     : undefined
 }

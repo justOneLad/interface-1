@@ -1,5 +1,3 @@
-import { WalletName as SolanaWalletName, WalletReadyState as SolanaWalletReadyState } from '@solana/wallet-adapter-base'
-import { Wallet as SolanaWallet, useWallet as useSolanaWallet } from '@solana/wallet-adapter-react'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
@@ -98,52 +96,6 @@ function buildEVMWalletInfo(params: {
     injected,
     deduplicationId,
     analyticsWalletType: walletTypeToAmplitudeWalletType(connector.type),
-  }
-}
-
-/** Determines connector status for a Solana wallet based on connection state. */
-function getSolanaWalletStatus(wallet: SolanaWallet, isCurrentWalletActive: boolean): ConnectorStatus {
-  if (!isCurrentWalletActive) {
-    return ConnectorStatus.Disconnected
-  }
-
-  if (wallet.adapter.connected) {
-    return ConnectorStatus.Connected
-  }
-  if (wallet.adapter.connecting) {
-    return ConnectorStatus.Connecting
-  }
-  return ConnectorStatus.Disconnected
-}
-
-/** Builds platform wallet info from Solana wallet adapter data. */
-function buildSVMWalletInfo(wallet: SolanaWallet, isCurrentWalletActive: boolean): PlatformWalletInfo<Platform.SVM> {
-  const connectorStatus = getSolanaWalletStatus(wallet, isCurrentWalletActive)
-  const injected = wallet.readyState === SolanaWalletReadyState.Installed
-  const walletIcon = wallet.adapter.icon
-  const walletName = wallet.adapter.name
-  const deduplicationId = normalizeWalletName(wallet.adapter.name)
-
-  // `@solana/wallet-adapter` does not expose a unique id for the wallet -- name is used in lieu of a more formal id.
-  const libraryId = wallet.adapter.name
-  const connectorId = 'SolanaWalletAdapter_' + libraryId
-
-  const accountInfo = wallet.adapter.publicKey
-    ? { address: wallet.adapter.publicKey.toBase58(), chainId: UniverseChainId.Solana }
-    : undefined
-
-  return {
-    platform: Platform.SVM,
-    connectorId,
-    libraryId,
-    walletName,
-    walletIcon,
-    connectorStatus,
-    injected,
-    accountInfo,
-    deduplicationId,
-    // TODO(SWAP-17): get better amplitude type mapping for Solana wallet connectors
-    analyticsWalletType: injected ? 'Browser Extension' : wallet.adapter.name,
   }
 }
 
@@ -352,35 +304,9 @@ function useEVMWalletInfos(pendingConnection: ExternalWallet | undefined): Platf
 }
 
 /** Hook that builds SVM wallet infos from Solana wallet adapter data. */
-function useSVMWalletInfos(): PlatformWalletInfo<Platform.SVM>[] {
-  const solanaWallet = useSolanaWallet()
-  const isSolanaEnabled = useFeatureFlag(FeatureFlags.Solana)
-
-  return useMemo(() => {
-    const activeSolanaWallet = solanaWallet.wallet
-    const allSolanaWallets = solanaWallet.wallets
-
-    if (!isSolanaEnabled) {
-      return []
-    }
-
-    return allSolanaWallets.flatMap((wallet) => {
-      const currentSolanaWalletIsActive = wallet.adapter.name === activeSolanaWallet?.adapter.name
-
-      const walletToUse = currentSolanaWalletIsActive ? activeSolanaWallet : wallet
-
-      // Ignore the coinbase adapter if the extension is not detected, as it errs upon connection attempt in this state.
-      if (
-        wallet.readyState === SolanaWalletReadyState.NotDetected &&
-        wallet.adapter.name === CONNECTION_PROVIDER_NAMES.COINBASE_SOLANA_WALLET_ADAPTER
-      ) {
-        return []
-      }
-
-      return buildSVMWalletInfo(walletToUse, currentSolanaWalletIsActive)
-    })
-    // `@solana/wallet-adapter` has inconsistent behavior for when sub-fields of the `useSolanaWallet` return types re-render -- to account for this, we use the entire return value as a dependency instead of its fields.
-  }, [solanaWallet, isSolanaEnabled])
+function useSVMWalletInfos(): PlatformWalletInfo<Platform>[] {
+  // Solana support has been removed - always return empty array
+  return []
 }
 
 /** Main hook that combines EVM and SVM wallet data into unified accounts state. */

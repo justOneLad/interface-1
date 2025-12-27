@@ -18,4 +18,3 @@ function createPlatformChecker<T extends Platform>(platform: T) {
 }
 
 export const isEVMChain = createPlatformChecker(Platform.EVM)
-export const isSVMChain = createPlatformChecker(Platform.SVM)

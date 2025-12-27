@@ -1,26 +1,20 @@
-# Uniswap Labs: Front End Interfaces
+# Uniswap Web Interface
 
-This is the **public** repository for Uniswap Labs’ front-end interfaces, including the Web App, Wallet Mobile App, and Wallet Extension. Uniswap is a protocol for decentralized exchange of Ethereum-based assets.
+This is the **public** repository for Uniswap's web interface. Uniswap is a protocol for decentralized exchange of Ethereum-based assets.
 
-## Interfaces
+## Web Interface
 
 - Web: [app.uniswap.org](https://app.uniswap.org)
-- Wallet (mobile + extension): [wallet.uniswap.org](https://wallet.uniswap.org)
 
-## Install & Apps
+## Install & Setup
 
 ```bash
 git clone git@github.com:Uniswap/interface.git
 bun install
-bun lfg
-bun web start
+bun web dev
 ```
 
-For instructions per application or package, see the README published for each application:
-
-- [Web](apps/web/README.md)
-- [Mobile](apps/mobile/README.md)
-- [Extension](apps/extension/README.md)
+For detailed instructions, see the [Web README](apps/web/README.md)
 
 ## Contributing
 

@@ -1,4 +1,3 @@
-import type { WalletName as SolanaWalletName } from '@solana/wallet-adapter-base'
 import type { AccountsData } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import type { Connector } from 'uniswap/src/features/accounts/store/types/Connector'
 import type { Session, SingleChainScope } from 'uniswap/src/features/accounts/store/types/Session'
@@ -9,14 +8,12 @@ export interface ExternalWallet extends Wallet<SigningCapability.Interactive> {
   name: string
   connectorIds: {
     [Platform.EVM]?: string
-    [Platform.SVM]?: string
   }
   analyticsWalletType: string
 }
 
 type LibraryIdFormatByPlatform = {
   [Platform.EVM]: string
-  [Platform.SVM]: SolanaWalletName
 }
 
 type BaseExternalConnector<P extends Platform> = Connector<P, ExternalSession<P>> & {
@@ -26,7 +23,7 @@ type BaseExternalConnector<P extends Platform> = Connector<P, ExternalSession<P>
 }
 
 export type ExternalConnector<P extends Platform = Platform> = Extract<
-  BaseExternalConnector<Platform.EVM> | BaseExternalConnector<Platform.SVM>,
+  BaseExternalConnector<Platform.EVM>,
   { platform: P }
 >
 export interface ExternalSession<P extends Platform> extends Session<P> {

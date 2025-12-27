@@ -7,10 +7,9 @@ type MultiPlatformConnectWalletServiceContext = {
   platformServices: Record<Platform, ConnectionService>
   /** Callback to trigger once one platform is connected. */
   onCompletedPlatform?: (platform: Platform) => void
-  onRejectSVMConnection: (walletId: string) => void
 }
 
-const MULTIPLATFORM_CONNECTION_ORDER = [Platform.EVM, Platform.SVM] as const
+const MULTIPLATFORM_CONNECTION_ORDER = [Platform.EVM] as const
 
 export function createMultiPlatformConnectionService(ctx: MultiPlatformConnectWalletServiceContext): ConnectionService {
   return {
@@ -27,10 +26,6 @@ export function createMultiPlatformConnectionService(ctx: MultiPlatformConnectWa
         if (result.connected) {
           connectedAtLeastOnePlatform = true
           ctx.onCompletedPlatform?.(platform)
-        } else {
-          if (platform === Platform.SVM) {
-            ctx.onRejectSVMConnection(params.wallet.id)
-          }
         }
 
         // Wallets that require separate prompts can struggle to update state properly without delays between connections

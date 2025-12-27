@@ -130,7 +130,7 @@ export function useTokenContextMenuOptions({
     handleShareToken({ currencyId })
   }, [currencyId, handleShareToken])
 
-  const updateCache = usePortfolioCacheUpdater(activeAddresses.evmAddress, activeAddresses.svmAddress)
+  const updateCache = usePortfolioCacheUpdater(activeAddresses.evmAddress, undefined)
 
   const hasViewedContractAddressExplainer = useSelector(selectHasViewedContractAddressExplainer)
 
@@ -190,26 +190,19 @@ export function useTokenContextMenuOptions({
         onPress: () => onPressSwap(CurrencyField.INPUT),
         Icon: CoinConvert,
       },
-    ]
-
-    const isSolanaToken = currencyIdToChain(currencyId) === UniverseChainId.Solana
-
-    // Only add Send action for non-Solana tokens
-    if (!isSolanaToken) {
-      actions.push({
+      {
         id: TokenMenuActionType.Send,
         label: t('common.button.send'),
         onPress: onPressSend,
         Icon: SendAction,
-      })
-    }
-
-    actions.push({
-      id: TokenMenuActionType.Receive,
-      label: t('common.button.receive'),
-      onPress: navigateToReceive,
-      Icon: ReceiveAlt,
-    })
+      },
+      {
+        id: TokenMenuActionType.Receive,
+        label: t('common.button.receive'),
+        onPress: navigateToReceive,
+        Icon: ReceiveAlt,
+      },
+    ]
 
     if (!isTestnetModeEnabled && copyAddressToClipboard && !isNative) {
       actions.push({

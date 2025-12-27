@@ -57,14 +57,13 @@ export function SwapFee({
   }
 
   const showFeePercentage = swapFeeInfo?.formattedPercent && !swapFeeInfo.noFeeCharged
-  const isJupiterSwap = currency.chainId === UniverseChainId.Solana
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
-      <SwapFeeWarning noFee={Boolean(swapFeeInfo?.noFeeCharged)} isJupiter={isJupiterSwap}>
+      <SwapFeeWarning noFee={Boolean(swapFeeInfo?.noFeeCharged)} isJupiter={false}>
         <Flex centered row gap="$spacing4">
           <Text color="$neutral2" variant="body3">
-            {isJupiterSwap ? t('swap.fees.jupiter.label') : t('swap.details.uniswapFee')}
+            {t('swap.details.uniswapFee')}
             {showFeePercentage && ` (${swapFeeInfo.formattedPercent})`}
           </Text>
         </Flex>

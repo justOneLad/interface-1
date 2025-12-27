@@ -160,24 +160,20 @@ export function useMultichainTransactions(accountAddress?: string): [InterfaceTr
 
 // returns all the transactions for the current chains
 function useAllTransactionsByChain(): { [txHash: string]: InterfaceTransactionDetails } {
-  const { evmAccount, svmAccount } = useWallet()
+  const { evmAccount } = useWallet()
   const { chainId: evmChainId } = useAccount()
 
   const state = useAppSelector(selectTransactions)
 
   const evmAddress = evmAccount?.address
-  const svmAddress = svmAccount?.address
 
   return useMemo(() => {
     const transactions: { [txHash: string]: InterfaceTransactionDetails } = {}
     if (evmAddress && evmChainId !== undefined) {
       Object.assign(transactions, state[evmAddress]?.[evmChainId] ?? {})
     }
-    if (svmAddress) {
-      Object.assign(transactions, state[svmAddress]?.[UniverseChainId.Solana] ?? {})
-    }
     return transactions
-  }, [evmChainId, evmAddress, svmAddress, state])
+  }, [evmChainId, evmAddress, state])
 }
 
 export function useTransaction(transactionHash?: string): InterfaceTransactionDetails | undefined {

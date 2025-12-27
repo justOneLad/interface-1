@@ -43,13 +43,12 @@ function useOnDisconnect() {
 
 function DisconnectTraceWrapper({ children }: PropsWithChildren) {
   const evmConnectorId = useActiveConnector(Platform.EVM)?.externalLibraryId
-  const svmConnectorId = useActiveConnector(Platform.SVM)?.externalLibraryId
 
   return (
     <Trace
       logPress
       element={ElementName.DisconnectWalletButton}
-      properties={{ connector_id: evmConnectorId, svm_connector_id: svmConnectorId }}
+      properties={{ connector_id: evmConnectorId }}
     >
       {children}
     </Trace>
@@ -58,17 +57,8 @@ function DisconnectTraceWrapper({ children }: PropsWithChildren) {
 
 export function DisconnectButton() {
   const onDisconnect = useOnDisconnect()
-  const isSolanaEnabled = useFeatureFlag(FeatureFlags.Solana)
 
-  // If Solana is enabled, a menu is shown to allow switching wallets and disconnecting.
-  if (isSolanaEnabled) {
-    return (
-      <DisconnectMenuTooltip>
-        <PowerIconButton pointer={false} />
-      </DisconnectMenuTooltip>
-    )
-  }
-
+  // Solana support removed - always use simple disconnect button
   return (
     <DisconnectTraceWrapper>
       <PowerIconButton onPress={onDisconnect} pointer={true} />
@@ -175,12 +165,10 @@ function getSwitchButtonText({
 }) {
   const switchPlatformText = {
     [Platform.EVM]: t('common.connectAWallet.button.evm.switch'),
-    [Platform.SVM]: t('common.connectAWallet.button.svm.switch'),
   }
 
   const connectPlatformText = {
     [Platform.EVM]: t('common.connectAWallet.button.evm'),
-    [Platform.SVM]: t('common.connectAWallet.button.svm'),
   }
 
   switch (variant) {
@@ -224,19 +212,16 @@ function sortSwitchButtons(a: { variant: SwitchButtonVariant }, b: { variant: Sw
   return 0
 }
 
-const PLATFORMS = [Platform.EVM, Platform.SVM] as const
+const PLATFORMS = [Platform.EVM] as const
 function useSwitchButtonVariants() {
   const platformConnectedStatuses = useAccountsStore((state) => ({
     [Platform.EVM]: state.getConnectionStatus(Platform.EVM).isConnected,
-    [Platform.SVM]: state.getConnectionStatus(Platform.SVM).isConnected,
   }))
 
   return useMemo(() => {
     return PLATFORMS.map((platform) => {
-      const otherPlatform = platform === Platform.EVM ? Platform.SVM : Platform.EVM
-      const connectedOnOtherPlatform = platformConnectedStatuses[otherPlatform]
       const connectedOnThisPlatform = platformConnectedStatuses[platform]
-      const variant = getSwitchButtonVariant({ connectedOnThisPlatform, connectedOnOtherPlatform })
+      const variant = getSwitchButtonVariant({ connectedOnThisPlatform, connectedOnOtherPlatform: false })
       return { platform, variant }
     }).sort(sortSwitchButtons)
   }, [platformConnectedStatuses])

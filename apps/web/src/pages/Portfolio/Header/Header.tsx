@@ -35,22 +35,8 @@ export function PortfolioHeader({ scrollY }: PortfolioHeaderProps) {
     navigate(buildPortfolioUrl(tab, chainId))
   })
   const availableNetworkOptions = useMemo(() => {
-    const isNFTsTab = tab === PortfolioTab.Nfts
-    if (isNFTsTab) {
-      return enabledChainIds.filter((chainId) => chainId !== UniverseChainId.Solana)
-    }
     return enabledChainIds
-  }, [tab, enabledChainIds])
-
-  // Redirect away from Solana if user navigates to NFT tab while on Solana
-  useEffect(() => {
-    const isNFTsTab = tab === PortfolioTab.Nfts
-    const isOnSolana = currentChainId === UniverseChainId.Solana
-    if (isNFTsTab && isOnSolana) {
-      // Navigate to the same tab but without chain filter (shows all networks)
-      navigate(buildPortfolioUrl(tab, undefined), { replace: true })
-    }
-  }, [tab, currentChainId, navigate])
+  }, [enabledChainIds])
 
   return (
     <Flex

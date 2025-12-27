@@ -121,7 +121,6 @@ describe('getEnabledChains', () => {
       chains: [
         UniverseChainId.Mainnet,
         UniverseChainId.Unichain,
-        UniverseChainId.Solana,
         UniverseChainId.Polygon,
         UniverseChainId.ArbitrumOne,
         UniverseChainId.Optimism,
@@ -138,7 +137,6 @@ describe('getEnabledChains', () => {
       gqlChains: [
         GraphQLApi.Chain.Ethereum,
         GraphQLApi.Chain.Unichain,
-        GraphQLApi.Chain.Solana,
         GraphQLApi.Chain.Polygon,
         GraphQLApi.Chain.Arbitrum,
         GraphQLApi.Chain.Optimism,

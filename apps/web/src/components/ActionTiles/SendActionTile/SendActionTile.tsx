@@ -12,25 +12,20 @@ import { useEvent } from 'utilities/src/react/hooks'
 export function SendActionTile({ onPress, padding }: { onPress?: () => void; padding?: FlexProps['p'] }): JSX.Element {
   const { t } = useTranslation()
   const { navigateToSendFlow } = useUniswapContext()
-  const { evmAddress, svmAddress } = useActiveAddresses()
-
-  const isSolanaOnlyWallet = Boolean(svmAddress && !evmAddress)
 
   const onPressSend = useEvent(() => {
-    if (!isSolanaOnlyWallet) {
-      navigateToSendFlow({ chainId: UniverseChainId.Mainnet })
-      onPress?.()
-    }
+    navigateToSendFlow({ chainId: UniverseChainId.Mainnet })
+    onPress?.()
   })
 
   return (
-    <SendButtonTooltip isSolanaOnlyWallet={isSolanaOnlyWallet}>
+    <SendButtonTooltip isSolanaOnlyWallet={false}>
       <ActionTileWithIconAnimation
         dataTestId={TestID.Send}
         Icon={SendAction}
         name={t('common.send.button')}
         onClick={onPressSend}
-        disabled={isSolanaOnlyWallet}
+        disabled={false}
         padding={padding}
       />
     </SendButtonTooltip>

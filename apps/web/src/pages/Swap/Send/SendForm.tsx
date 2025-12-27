@@ -18,7 +18,6 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useActiveAddress, useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/slice/hooks'
@@ -41,16 +40,7 @@ function useSendButtonState() {
   const { parsedTokenAmount, recipientData } = derivedSendInfo
   const { t } = useTranslation()
 
-  const isSolanaToken = inputCurrency?.chainId && isSVMChain(inputCurrency.chainId)
-
   return useMemo(() => {
-    if (isSolanaToken) {
-      return {
-        label: t('send.solanaSendNotSupported'),
-        disabled: true,
-      }
-    }
-
     if (recipient && !recipientData) {
       return {
         label: t('common.invalidRecipient.error'),

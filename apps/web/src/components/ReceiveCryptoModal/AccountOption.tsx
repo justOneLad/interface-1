@@ -7,10 +7,8 @@ import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { MAINNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { shortenAddress } from 'utilities/src/addresses'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 
 const Container = styled.div`
   display: flex;
@@ -39,10 +37,8 @@ export function AccountOption({
   const [isHovered, setIsHovered] = useState(false)
   const { t } = useTranslation()
 
-  const { chains } = useEnabledChains({ platform: isEVMAddress(account) ? Platform.EVM : Platform.SVM })
-  const platformAddressDisplay = isEVMAddress(account)
-    ? `${MAINNET_CHAIN_INFO.name} +${chains.length - 1} ${t('extension.connection.networks').toLowerCase()}`
-    : SOLANA_CHAIN_INFO.name
+  const { chains } = useEnabledChains({ platform: Platform.EVM })
+  const platformAddressDisplay = `${MAINNET_CHAIN_INFO.name} +${chains.length - 1} ${t('extension.connection.networks').toLowerCase()}`
 
   return (
     <Container onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>

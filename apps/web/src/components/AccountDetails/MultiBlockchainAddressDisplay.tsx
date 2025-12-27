@@ -1,5 +1,5 @@
 import StatusIcon from 'components/StatusIcon'
-import { useAccountsStore, useActiveAddresses } from 'features/accounts/store/hooks'
+import { useActiveAddresses } from 'features/accounts/store/hooks'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
@@ -12,7 +12,6 @@ import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { MAINNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -106,11 +105,7 @@ function TooltipAccountRow({ account }: { account: AccountItem }) {
   const { chains: evmChains } = useEnabledChains({ platform: Platform.EVM })
   const numberOfSupportedEVMChains = evmChains.length
 
-  const multipleWalletsConnected = useAccountsStore((state) => {
-    const evmWalletId = state.activeConnectors.evm?.session?.walletId
-    const svmWalletId = state.activeConnectors.svm?.session?.walletId
-    return Boolean(evmWalletId && svmWalletId && evmWalletId !== svmWalletId)
-  })
+  const multipleWalletsConnected = false
 
   return (
     <Flex row alignItems="center" justifyContent="space-between" gap="$spacing24">
@@ -121,16 +116,11 @@ function TooltipAccountRow({ account }: { account: AccountItem }) {
             <Text variant="body4" color="$neutral1">
               {shortenAddress({ address: account.address })}
             </Text>
-            <NetworkLogo
-              chainId={account.platform === Platform.SVM ? UniverseChainId.Solana : UniverseChainId.Mainnet}
-              size={iconSizes.icon12}
-            />
+            <NetworkLogo chainId={UniverseChainId.Mainnet} size={iconSizes.icon12} />
           </Flex>
           <Text variant="body4" color="$neutral2">
-            {account.platform === Platform.SVM
-              ? SOLANA_CHAIN_INFO.name
-              : MAINNET_CHAIN_INFO.name +
-                ` +${numberOfSupportedEVMChains - 1} ${t('extension.connection.networks').toLowerCase()}`}
+            {MAINNET_CHAIN_INFO.name +
+              ` +${numberOfSupportedEVMChains - 1} ${t('extension.connection.networks').toLowerCase()}`}
           </Text>
         </Flex>
       </Flex>
@@ -150,9 +140,7 @@ export function MultiBlockchainAddressDisplay({ hideAddressInSubtitle }: { hideA
   })
   const unitag = unitagData?.username
 
-  const svmAddress = activeAddresses.svmAddress
-
-  const primaryAddress = evmAddress ?? svmAddress
+  const primaryAddress = evmAddress
 
   const accounts: AccountItem[] = useMemo(() => {
     const accountsList: AccountItem[] = []
@@ -163,15 +151,8 @@ export function MultiBlockchainAddressDisplay({ hideAddressInSubtitle }: { hideA
         platform: Platform.EVM,
       })
     }
-    if (svmAddress) {
-      accountsList.push({
-        address: svmAddress,
-        label: SOLANA_CHAIN_INFO.name,
-        platform: Platform.SVM,
-      })
-    }
     return accountsList
-  }, [evmAddress, svmAddress])
+  }, [evmAddress])
 
   if (!primaryAddress) {
     return null

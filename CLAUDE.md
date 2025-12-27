@@ -4,40 +4,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Uniswap Universe is a monorepo containing all Uniswap front-end interfaces:
+This is the Uniswap web interface - a decentralized exchange web application.
 
 - **Web** (`apps/web/`) - Decentralized exchange web interface
-- **Mobile** (`apps/mobile/`) - React Native app for iOS/Android
-- **Extension** (`apps/extension/`) - Browser wallet extension
 
 ## Common Development Commands
 
 ### Setup
 
 ```bash
-# Initial setup (requires 1Password CLI)
+# Initial setup
 bun install
 bun local:check
-bun lfg  # Sets up mobile and extension
 ```
 
-### Development Servers
+### Development Server
 
 ```bash
 bun web dev        # Web with Vite
-bun mobile ios          # iOS app
-bun mobile android      # Android app
-bun extension start     # Extension
 ```
 
 ### Building
 
 ```bash
 bun g:build                      # Build all packages
-bun web build:production    # Web production build
-bun mobile ios:bundle            # iOS bundle
-bun mobile android:release       # Android release
-bun extension build:production   # Extension production
+bun web build:production         # Web production build
 ```
 
 ### Testing
@@ -47,7 +38,6 @@ bun g:test                      # Run all tests
 bun notifications test          # Run tests for a specific package (e.g. notifications)
 bun g:test:coverage             # With coverage
 bun web playwright:test         # Web E2E tests
-bun mobile e2e                  # Mobile E2E tests
 ```
 
 ### Code Quality
@@ -71,10 +61,9 @@ bun i18n:extract                # Extract localized strings (run after changing 
 ### Key Technologies
 
 - **TypeScript** everywhere
-- **React** for web/extension
-- **React Native** for mobile
+- **React** for web
 - **Redux Toolkit** for state management
-- **Tamagui** for cross-platform UI components
+- **Tamagui** for UI components
 - **Ethers.js/Viem** for blockchain interactions
 
 ### Code Organization Principles
@@ -83,7 +72,6 @@ bun i18n:extract                # Extract localized strings (run after changing 
 
 - **ALWAYS** use `styled` from `ui/src` (never styled-components or direct Tamagui); UI components may use inline styling where appropriate
 - Use theme tokens instead of hardcoded values
-- Platform-specific files: `Component.ios.tsx`, `Component.android.tsx`, `Component.web.tsx`, `Component.native.tsx` (with stub files for platforms where specific implementation isn't needed)
 
 #### State Management
 
@@ -96,7 +84,7 @@ bun i18n:extract                # Extract localized strings (run after changing 
 
 1. State declarations at top
 2. Event handlers after state
-3. Memoize properly, especially for anything that might be used in the React Native app
+3. Memoize properly when needed
 4. JSX at the end
 5. Keep components under 250 lines
 
@@ -119,20 +107,21 @@ bun i18n:extract                # Extract localized strings (run after changing 
 
 ## Critical Development Notes
 
-1. **Environment Variables**: Override URLs in `.env.defaults.local` (mobile) or `.env` (extension)
+1. **Environment Variables**: Override URLs in `.env` files
 2. **Pre-commit Hooks**: Use `--no-verify` to skip or set `export LEFTHOOK=0` to disable
-3. **Python Setup**: Run `brew install python-setuptools` if you encounter Python module errors
-4. **Mobile Development**: Always run `bun mobile pod` after dependency changes
-5. **Bundle Size**: Monitor bundle size impacts when adding dependencies
+3. **Bundle Size**: Monitor bundle size impacts when adding dependencies
 
 ## Package Dependencies
 
 Core shared packages:
 
-- `packages/ui/` - Cross-platform UI components and theme
+- `packages/ui/` - UI components and theme
 - `packages/uniswap/` - Core business logic and utilities
-- `packages/wallet/` - Wallet functionality
 - `packages/utilities/` - Common utilities
+- `packages/api/` - API client
+- `packages/gating/` - Feature gating
+- `packages/sessions/` - Session management
+- `packages/notifications/` - Notification system
 
 ## Blockchain Integration
 

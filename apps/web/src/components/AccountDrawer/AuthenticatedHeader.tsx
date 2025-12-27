@@ -53,14 +53,9 @@ export default function AuthenticatedHeader({
   const { t } = useTranslation()
   const isPortfolioPageEnabled = useFeatureFlag(FeatureFlags.PortfolioPage)
 
-  const isSolanaConnected = useConnectionStatus(Platform.SVM).isConnected
-  const multipleWalletsConnected = useAccountsStore((state) => {
-    const evmWalletId = state.activeConnectors.evm?.session?.walletId
-    const svmWalletId = state.activeConnectors.svm?.session?.walletId
-    return Boolean(evmWalletId && svmWalletId && evmWalletId !== svmWalletId)
-  }) // if different wallets are connected, do not show mini wallet icon
+  const multipleWalletsConnected = false // Solana support removed - always single wallet
 
-  const shouldShowExtensionDeeplinks = useIsUniswapExtensionConnected() && !isSolanaConnected
+  const shouldShowExtensionDeeplinks = useIsUniswapExtensionConnected()
 
   const { isTestnetModeEnabled } = useEnabledChains()
 

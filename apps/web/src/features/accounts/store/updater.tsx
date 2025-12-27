@@ -167,20 +167,7 @@ export function WebAccountsStoreUpdater() {
     // User properties *must* be set before sending corresponding event properties,
     // so that the event contains the correct and up-to-date user properties.
 
-    // Set user/event properties for SVM account connected
-    if (hasNewSvmConnection) {
-      const walletNameSvm = svmWallet.name
-
-      setUserProperty(InterfaceUserPropertyName.AllWalletChainIds, UniverseChainId.Solana, true)
-      setUserProperty(InterfaceUserPropertyName.WalletAddressSVM, currentSvmAddress)
-      setUserProperty(InterfaceUserPropertyName.AllSVMWalletAddressesConnected, currentSvmAddress, true)
-      walletConnectedProperties.wallet_address_svm = currentSvmAddress
-
-      setUserProperty(InterfaceUserPropertyName.WalletNameSVM, walletNameSvm)
-      setUserProperty(InterfaceUserPropertyName.WalletTypeSVM, svmWallet.analyticsWalletType)
-      walletConnectedProperties.wallet_name_svm = walletNameSvm
-      walletConnectedProperties.wallet_type_svm = svmWallet.analyticsWalletType
-    }
+    // Solana support removed - SVM connection logic removed
 
     // Set user/event properties for EVM account connected
     if (hasNewEvmConnection) {

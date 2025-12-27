@@ -12,10 +12,7 @@ function getTitle(t: TFunction, connectOnPlatform: Platform | 'any'): string {
     return t('common.connectAWallet.button.evm')
   }
 
-  if (connectOnPlatform === Platform.SVM) {
-    return t('common.connectAWallet.button.svm')
-  }
-
+  // Solana support removed - always return switch title for 'any'
   return t('common.connectAWallet.button.switch')
 }
 
@@ -51,7 +48,7 @@ export function SwitchWalletModal({
       header={
         <Flex gap="$gap16">
           {header}
-          {connectOnPlatform !== Platform.SVM ? uniswapOptions : null}
+          {uniswapOptions}
         </Flex>
       }
     >

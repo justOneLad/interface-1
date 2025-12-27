@@ -80,11 +80,6 @@ function useSendSwapQuoteFailureAnalyticsEvent(): (params: {
 function logSwapQuoteFailure(params: { error: Error; input: UseTradeArgs }): void {
   const { error, input } = params
 
-  // Currently we only want to log Solana quote failures
-  if (input.amountSpecified?.currency.chainId !== UniverseChainId.Solana) {
-    return
-  }
-
   // Avoid logging fetch errors, as they are common / monitored by our APIs
   if (error instanceof FetchError) {
     return

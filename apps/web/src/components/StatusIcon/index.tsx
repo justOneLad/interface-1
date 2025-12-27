@@ -8,7 +8,6 @@ import { Flex, FlexProps } from 'ui/src/components/layout'
 import { breakpoints } from 'ui/src/theme'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 
 const IconWrapper = styled.div<{ size?: number }>`
   position: relative;
@@ -102,8 +101,8 @@ export default function StatusIcon({
   const activeAddresses = useActiveAddresses()
   const hasSocks = useHasSocks()
 
-  const addressToDisplay = address ?? activeAddresses.evmAddress ?? activeAddresses.svmAddress
-  const platform = isEVMAddress(addressToDisplay) ? Platform.EVM : Platform.SVM
+  const addressToDisplay = address ?? activeAddresses.evmAddress
+  const platform = Platform.EVM
 
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">

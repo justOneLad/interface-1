@@ -4,7 +4,6 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { HexString } from 'utilities/src/addresses/hex'
-import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 import { tryCatch } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -32,7 +31,6 @@ type GetValidAddressParams = {
 const VALIDATION_CACHE_KEY_FN_MAP = {
   [Platform.EVM]: (params: GetValidAddressParams) =>
     `${Platform.EVM}-${params.address}-${Boolean(params.withEVMChecksum)}`,
-  [Platform.SVM]: (params: GetValidAddressParams) => `${Platform.SVM}-${params.address}`,
 } as const
 
 const ADDRESS_VALIDATION_CACHE = new Map<string, string | null>()
@@ -49,25 +47,20 @@ function getCachedAddress(params: GetValidAddressParams): {
 
 const VALIDATION_FN_MAP = {
   [Platform.EVM]: getValidEVMAddress,
-  [Platform.SVM]: getValidSVMAddress,
 } as const
 
 /**
- * Validates an EVM or SVM address and returns the normalized address. EVM addresses will be lowercased or checksummed depending on the `withEVMChecksum` field.
+ * Validates an EVM address and returns the normalized address. EVM addresses will be lowercased or checksummed depending on the `withEVMChecksum` field.
  *
- * FOR EVM ADDRESSES:
  * When withEVMChecksum === true, this method performs a checksum on the address. Please, use only for validating user input.
  * When withEVMChecksum === false, it checks: length === 42 and startsWith('0x') and returns a lowercased address.
  *
- * FOR SVM ADDRESSES:
- * withEVMChecksum is ignored. SVM does not have checksum; addresses are validated to ensure they are 32 byte base58 strings.
- *
  * @param address The address to validate and normalize
- * @param withEVMChecksum Whether to perform a checksum on the address if it is an EVM address
- * @param platform The blockchain platform of the address, determines what validation is performed
+ * @param withEVMChecksum Whether to perform a checksum on the address
+ * @param platform The blockchain platform of the address (EVM only)
  * @param log If logging is enabled in case of errors
  *
- * @returns The normalized address or false if the address is invalid
+ * @returns The normalized address or null if the address is invalid
  */
 export function getValidAddress(params: GetValidAddressParams): Nullable<HexString | string> {
   const { address, withEVMChecksum, log } = params
@@ -115,20 +108,6 @@ function getValidEVMAddress({ address, withEVMChecksum }: { address: string; wit
   return normalizeAddress(addressWith0x, AddressStringFormat.Lowercase) as HexString
 }
 
-/**
- * Validates a Solana address and returns the normalized address.
- *
- * @param address The address to validate and normalize
- * @returns The input address, if it is a valid SVM address (32 byte base58 string)
- * @throws {Error} If the address is invalid
- */
-function getValidSVMAddress({ address }: { address: string }): string {
-  if (!isSVMAddress(address)) {
-    throw new Error('Address has an invalid format')
-  }
-
-  return address
-}
 
 /**
  * Normalizes an address given a format
@@ -190,19 +169,15 @@ export function areAddressesEqual(params: AreAddressesEqualParams): boolean {
     return false
   }
 
-  // Solana addresses are Base58 encoded, so they are case-sensitive. Can compare strings directly.
+  // EVM addresses are case-insensitive, so normalize before comparing
   if (addressInput1.address === addressInput2.address) {
     return true
   }
 
-  if (platform1 === Platform.EVM) {
-    return (
-      normalizeAddress(addressInput1.address ?? '', AddressStringFormat.Lowercase) ===
-      normalizeAddress(addressInput2.address ?? '', AddressStringFormat.Lowercase)
-    )
-  }
-
-  return false
+  return (
+    normalizeAddress(addressInput1.address ?? '', AddressStringFormat.Lowercase) ===
+    normalizeAddress(addressInput2.address ?? '', AddressStringFormat.Lowercase)
+  )
 }
 
 /**

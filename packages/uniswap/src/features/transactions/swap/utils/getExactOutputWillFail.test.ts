@@ -19,16 +19,6 @@ describe('getExactOutputWillFail', () => {
       sellFeeBps,
     }) as Token
 
-  const createSolanaToken = (): Token => {
-    return buildCurrency({
-      chainId: UniverseChainId.Solana,
-      address: 'So11111111111111111111111111111111111111112',
-      decimals: 9,
-      symbol: 'SOL',
-      name: 'Solana',
-    }) as Token
-  }
-
   const createCurrencyInfo = (currency: Token): CurrencyInfo => {
     return {
       currency,
@@ -99,49 +89,5 @@ describe('getExactOutputWillFail', () => {
       }),
     )
     expect(result.current.exactOutputWouldFailIfCurrenciesSwitched).toBe(true)
-  })
-
-  describe('Solana tokens', () => {
-    it('returns true for exactOutputWillFail when input is Solana token', () => {
-      const { result } = renderHook(() =>
-        getExactOutputWillFail({
-          currencies: {
-            [CurrencyField.INPUT]: createCurrencyInfo(createSolanaToken()),
-            [CurrencyField.OUTPUT]: createCurrencyInfo(createToken()),
-          },
-        }),
-      )
-      expect(result.current.exactOutputWillFail).toBe(true)
-      expect(result.current.exactOutputWouldFailIfCurrenciesSwitched).toBe(true)
-      expect(result.current.outputTokenHasBuyTax).toBe(false)
-    })
-
-    it('returns true for exactOutputWillFail when output is Solana token', () => {
-      const { result } = renderHook(() =>
-        getExactOutputWillFail({
-          currencies: {
-            [CurrencyField.INPUT]: createCurrencyInfo(createToken()),
-            [CurrencyField.OUTPUT]: createCurrencyInfo(createSolanaToken()),
-          },
-        }),
-      )
-      expect(result.current.exactOutputWillFail).toBe(true)
-      expect(result.current.exactOutputWouldFailIfCurrenciesSwitched).toBe(true)
-      expect(result.current.outputTokenHasBuyTax).toBe(false)
-    })
-
-    it('returns true for exactOutputWillFail when both are Solana tokens', () => {
-      const { result } = renderHook(() =>
-        getExactOutputWillFail({
-          currencies: {
-            [CurrencyField.INPUT]: createCurrencyInfo(createSolanaToken()),
-            [CurrencyField.OUTPUT]: createCurrencyInfo(createSolanaToken()),
-          },
-        }),
-      )
-      expect(result.current.exactOutputWillFail).toBe(true)
-      expect(result.current.exactOutputWouldFailIfCurrenciesSwitched).toBe(true)
-      expect(result.current.outputTokenHasBuyTax).toBe(false)
-    })
   })
 })

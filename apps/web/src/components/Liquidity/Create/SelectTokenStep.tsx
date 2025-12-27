@@ -50,7 +50,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
@@ -128,10 +127,6 @@ const FeeTierContainer = styled(Flex, {
 })
 
 function isUnsupportedLPChain(chainId: UniverseChainId | undefined, protocolVersion: ProtocolVersion): boolean {
-  if (chainId && isSVMChain(chainId)) {
-    return true
-  }
-
   if (protocolVersion === ProtocolVersion.V2) {
     return Boolean(chainId && !SUPPORTED_V2POOL_CHAIN_IDS.includes(chainId))
   }
@@ -731,17 +726,11 @@ function SelectStepError({
       <ErrorCallout
         errorMessage={true}
         title={
-          unsupportedChainId === UniverseChainId.Solana
-            ? t('position.create.unsupportedSolana')
-            : protocolVersion === ProtocolVersion.V2
-              ? t('position.create.v2unsupportedChain')
-              : t('position.migrate.v4unsupportedChain')
+          protocolVersion === ProtocolVersion.V2
+            ? t('position.create.v2unsupportedChain')
+            : t('position.migrate.v4unsupportedChain')
         }
-        description={
-          unsupportedChainId === UniverseChainId.Solana
-            ? t('position.create.unsupportedSolana.description')
-            : t('position.create.unsupportedToken.description')
-        }
+        description={t('position.create.unsupportedToken.description')}
       />
     )
   }

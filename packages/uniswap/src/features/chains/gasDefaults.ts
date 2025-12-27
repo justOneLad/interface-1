@@ -20,18 +20,3 @@ export const GENERIC_L2_GAS_CONFIG = {
     default: 8, // .0008 ETH
   },
 } as const
-
-/**
- * Solana-specific gas configuration.
- * Solana has 9 decimals and much lower fees than EVM chains.
- */
-export const SOLANA_GAS_CONFIG = {
-  send: {
-    configKey: SwapConfigKey.SolanaSendMinGasAmount,
-    default: 1, // .0001 SOL
-  },
-  swap: {
-    configKey: SwapConfigKey.SolanaSwapMinGasAmount,
-    default: 3, // .0003 SOL
-  },
-} as const

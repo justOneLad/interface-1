@@ -16,9 +16,6 @@ jest.mock('@universe/gating', () => {
   }
 })
 
-// Get Solana currency with 9 decimals
-const SOLANA_CURRENCY = nativeOnChain(UniverseChainId.Solana)
-
 describe(useMaxAmountSpend, () => {
   beforeEach(() => {
     // Reset mock to return default values
@@ -106,27 +103,6 @@ describe(useMaxAmountSpend, () => {
     expect(overriddenSpend).toBeDefined()
     // With 10x gas reservation, less should be spendable
     expect(JSBI.lessThan(overriddenSpend!.quotient, defaultSpend!.quotient)).toBe(true)
-  })
-
-  it('handles chains with different decimal places correctly', () => {
-    // Test with Solana (9 decimals) - 1 SOL
-    const solanaAmount = CurrencyAmount.fromRawAmount(SOLANA_CURRENCY, '1000000000') // 1 SOL
-    const solanaSpend = useMaxAmountSpend({ currencyAmount: solanaAmount })
-
-    // Test with Ethereum (18 decimals) - 1 ETH
-    const ethAmount = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, '1000000000000000000') // 1 ETH
-    const ethSpend = useMaxAmountSpend({ currencyAmount: ethAmount })
-
-    expect(solanaSpend).toBeDefined()
-    expect(ethSpend).toBeDefined()
-
-    // Both should have gas reserved (amount reduced)
-    expect(JSBI.lessThan(solanaSpend!.quotient, solanaAmount.quotient)).toBe(true)
-    expect(JSBI.lessThan(ethSpend!.quotient, ethAmount.quotient)).toBe(true)
-
-    // Both should still have spendable amounts
-    expect(JSBI.greaterThan(solanaSpend!.quotient, JSBI.BigInt(0))).toBe(true)
-    expect(JSBI.greaterThan(ethSpend!.quotient, JSBI.BigInt(0))).toBe(true)
   })
 
   it('applies both isExtraTx and txType modifiers correctly', () => {

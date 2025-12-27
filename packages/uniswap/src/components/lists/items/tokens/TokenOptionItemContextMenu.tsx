@@ -155,8 +155,6 @@ function _TokenOptionItemContextMenu({
   const dropdownOptions: MenuOptionItem[] = useMemo(() => {
     const options: MenuOptionItem[] = []
 
-    const isSolanaToken = currencyIdToChain(id) === UniverseChainId.Solana
-
     if (actions.includes(TokenContextMenuAction.CopyAddress)) {
       if (isWebPlatform) {
         // onCopyAddress does not trigger a toast on web, so we display success in-line instead
@@ -200,8 +198,7 @@ function _TokenOptionItemContextMenu({
       })
     }
 
-    // Only add Send action for non-Solana tokens
-    if (actions.includes(TokenContextMenuAction.Send) && !isSolanaToken) {
+    if (actions.includes(TokenContextMenuAction.Send)) {
       options.push({
         onPress: onNavigateToSend,
         label: t('common.button.send'),

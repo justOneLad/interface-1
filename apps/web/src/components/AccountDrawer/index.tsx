@@ -230,7 +230,6 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
   const isUniExtensionConnected = useIsUniswapExtensionConnected()
   const media = useMedia()
   const { isConnected } = useConnectionStatus()
-  const isSolanaConnected = useConnectionStatus(Platform.SVM).isConnected
 
   if (media.md) {
     return (
@@ -238,7 +237,7 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
         {children}
       </WebBottomSheet>
     )
-  } else if ((!isUniExtensionConnected && isConnected) || (isUniExtensionConnected && isSolanaConnected)) {
+  } else if (!isUniExtensionConnected && isConnected) {
     return (
       <Container data-testid={TestID.AccountDrawer}>
         <AccountSideDrawer isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
